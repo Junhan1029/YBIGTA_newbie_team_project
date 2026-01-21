@@ -107,7 +107,7 @@ class LotteonProcessor(BaseDataProcessor):
         # ---------------------------------------------------------
         #  LDA 토픽 모델링 (인덱스 + 키워드 조합 저장)
         # ---------------------------------------------------------
-        print(" -> 🧠 벡터화(BOW) 및 토픽 모델링(LDA) 수행 중...")
+        print(" -> 벡터화(BOW) 및 토픽 모델링(LDA) 수행 중...")
         
         # (1) 벡터화 수행
         vectorizer = CountVectorizer(max_features=1000, min_df=2)
@@ -124,7 +124,7 @@ class LotteonProcessor(BaseDataProcessor):
         feature_names = vectorizer.get_feature_names_out()
         topic_label_dict = {}
         
-        print(" -> 🏷️ 토픽 라벨 생성 중...")
+        print(" -> 토픽 라벨 생성 중...")
         for topic_idx, topic in enumerate(lda_model.components_):
             # 상위 3개 단어 추출
             top_features_ind = topic.argsort()[:-4:-1]
@@ -135,12 +135,12 @@ class LotteonProcessor(BaseDataProcessor):
             label = f"{topic_idx}({keywords_str})"
             
             topic_label_dict[topic_idx] = label
-            print(f"    📌 Topic {topic_idx} -> {label}")
-        
+            print(f"    Topic {topic_idx} -> {label}")
+    
         # (5) 데이터프레임에 적용
         self.df['topic_id'] = [topic_label_dict[idx] for idx in topic_indices]
         
-        print(" -> ✅ 'topic_id' 컬럼 생성 완료 (예: 0(배송_빠름))")
+        print(" -> 'topic_id' 컬럼 생성 완료 (예: 0(배송_빠름))")
 
     def save_to_database(self) -> None:
         """

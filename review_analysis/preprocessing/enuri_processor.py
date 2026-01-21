@@ -32,13 +32,13 @@ class EnuriProcessor(BaseDataProcessor):
     def preprocess(self) -> None:
         """
         [EDA 및 전처리]
-        형식 오류 발생 시 해당 데이터를 터미널에 출력하는 로직이 추가되었다.
+        형식 오류 발생 시 해당 데이터를 터미널에 출력한다.
         """
         # 1. 데이터 로드
         try:
             self.df = pd.read_csv(self.input_path)
         except Exception as e:
-            print(f"[Error] 파일 로드 실패: {e}")
+            print(f"파일 로드 실패: {e}")
             return
 
         stats = {"초기 데이터 개수": len(self.df)}
@@ -134,7 +134,7 @@ class EnuriProcessor(BaseDataProcessor):
         # ---------------------------------------------------------
         # LDA 토픽 모델링
         # ---------------------------------------------------------
-        print(" -> 🧠 벡터화(BOW) 및 토픽 모델링(LDA) 수행 중...")
+        print(" -> 벡터화(BOW) 및 토픽 모델링(LDA) 수행 중...")
         
         # (1) 벡터화
         vectorizer = CountVectorizer(max_features=1000, min_df=2)
@@ -149,7 +149,7 @@ class EnuriProcessor(BaseDataProcessor):
         feature_names = vectorizer.get_feature_names_out()
         topic_label_dict = {}
         
-        print(" -> 🏷️ 토픽 라벨 생성 중...")
+        print(" -> 토픽 라벨 생성 중...")
         for topic_idx, topic in enumerate(lda_model.components_):
             top_features_ind = topic.argsort()[:-4:-1]
             top_words = [feature_names[i] for i in top_features_ind]
@@ -158,10 +158,10 @@ class EnuriProcessor(BaseDataProcessor):
             keywords_str = "_".join(top_words)
             label = f"{topic_idx}({keywords_str})"
             topic_label_dict[topic_idx] = label
-            print(f"    📌 Topic {topic_idx} -> {label}")
+            print(f"    Topic {topic_idx} -> {label}")
         
         self.df['topic_id'] = [topic_label_dict[idx] for idx in topic_indices]
-        print(" -> ✅ 'topic_id' 컬럼 생성 완료")
+        print(" -> 'topic_id' 컬럼 생성 완료")
 
 
     def save_to_database(self) -> None:
