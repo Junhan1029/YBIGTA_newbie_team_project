@@ -2,6 +2,10 @@ import pandas as pd
 import re
 import os
 from datetime import datetime
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
+
 from review_analysis.preprocessing.base_processor import BaseDataProcessor
 
 class EnuriProcessor(BaseDataProcessor):
@@ -108,15 +112,57 @@ class EnuriProcessor(BaseDataProcessor):
         print("="*30 + "\n")
 
     def feature_engineering(self) -> None:
-        """[FE 및 벡터화 준비] 계절 파생 변수 및 분석용 토큰을 생성한다."""
+        """
+        [Feature Engineering 단계]
+        시계열 파생변수 생성, 텍스트 토큰화, 리뷰 길이(review_length) 계산, 그리고 LDA 토픽 모델링을 수행한다.
+
+        이때 토픽 모델링은 CountVectorizer로 벡터화(BOW) 수행하여 LDA 모델을 통해 잠재된 3가지 토픽을 추출한다.
+        데이터 저장 시 단순 숫자가 아닌 '토픽번호(핵심키워드)' 형태로 'topic_id' 컬럼을 생성한다.
+        (예: 0(배송_빠름_기사님))
+        """
+        if self.df.empty: return
+        print(" -> Feature Engineering 수행 중...")
+
+        # 1. 시계열 파생변수 
         self.df['month'] = self.df['date'].dt.month
         self.df['season'] = self.df['month'].apply(self._get_season)
-        
-        self.df['tokens'] = self.df['cleaned_content'].apply(
-            lambda x: ' '.join(re.findall(r'[가-힣a-zA-Z0-9]+', x))
-        )
-        
+
+        # 2. 토큰화
+        self.df['tokens'] = self.df['cleaned_content'].apply(lambda x: ' '.join(re.findall(r'[가-힣a-zA-Z0-9]+', x)))
         self.df['review_length'] = self.df['cleaned_content'].apply(len)
+
+        # ---------------------------------------------------------
+        # LDA 토픽 모델링
+        # ---------------------------------------------------------
+        print(" -> 🧠 벡터화(BOW) 및 토픽 모델링(LDA) 수행 중...")
+        
+        # (1) 벡터화
+        vectorizer = CountVectorizer(max_features=1000, min_df=2)
+        vectorized_data = vectorizer.fit_transform(self.df['tokens'])
+        
+        # (2) LDA 모델링
+        lda_model = LatentDirichletAllocation(n_components=3, random_state=42)
+        topic_output = lda_model.fit_transform(vectorized_data)
+        
+        # (3) 토픽 ID 및 라벨 생성
+        topic_indices = topic_output.argmax(axis=1)
+        feature_names = vectorizer.get_feature_names_out()
+        topic_label_dict = {}
+        
+        print(" -> 🏷️ 토픽 라벨 생성 중...")
+        for topic_idx, topic in enumerate(lda_model.components_):
+            top_features_ind = topic.argsort()[:-4:-1]
+            top_words = [feature_names[i] for i in top_features_ind]
+            
+            # 라벨 포맷: ex) 0(배송_빠름_기사님)
+            keywords_str = "_".join(top_words)
+            label = f"{topic_idx}({keywords_str})"
+            topic_label_dict[topic_idx] = label
+            print(f"    📌 Topic {topic_idx} -> {label}")
+        
+        self.df['topic_id'] = [topic_label_dict[idx] for idx in topic_indices]
+        print(" -> ✅ 'topic_id' 컬럼 생성 완료")
+
 
     def save_to_database(self) -> None:
         """전처리 결과를 CSV 파일로 저장한다."""
