@@ -5,13 +5,15 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.join(current_dir, "..", "..")
 sys.path.append(root_dir)
+
 from review_analysis.crawling.base_crawler import BaseCrawler
+from review_analysis.crawling.emart_crawler import EmartCrawler
 from review_analysis.crawling.lotteon_crawler import LotteonCrawler
 from review_analysis.crawling.enuri_crawler import EnuriCrawler
 
 # 모든 크롤링 클래스를 예시 형식으로 적어주세요. 
 CRAWLER_CLASSES: Dict[str, Type[BaseCrawler]] = {
-    "ssg": SSGCrawler,
+    "emart": EmartCrawler,
     "lotteon": LotteonCrawler,
     "enuri": EnuriCrawler
     
