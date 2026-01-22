@@ -10,6 +10,22 @@
 <img width="590" height="200" alt="push_rejected" src="https://github.com/user-attachments/assets/c9fcca0f-6702-40b5-811c-dc401af1f29b" />
 <img width="642" height="607" alt="review_and_merged" src="https://github.com/user-attachments/assets/2205a210-4662-4d94-972c-0c778a9d35d1" />
 
+################ Web ################
+본 프로젝트는 FastAPI 기반의 사용자 관리 웹 애플리케이션으로, 회원가입, 로그인, 비밀번호 변경, 사용자 삭제 기능을 제공한다. 프로젝트를 실행하기 위해서는 Python 3.9 이상 환경이 필요하며, 가상환경 구성을 통해 패키지 충돌을 방지하는 것을 권장한다.
+
+프로젝트 실행 전, 먼저 프로젝트 루트 디렉토리에서 Python 가상환경을 생성한다. Python이 설치된 환경에서 python -m venv venv 명령어를 실행하면 venv라는 이름의 가상환경이 생성된다. 가상환경 생성 후, Windows 환경에서는 venv\Scripts\activate 명령어를 사용하여 가상환경을 활성화하고, macOS 또는 Linux 환경에서는 source venv/bin/activate 명령어를 사용하여 가상환경을 활성화한다. 가상환경이 정상적으로 활성화되면 터미널 프롬프트에 가상환경 이름이 표시된다.
+
+가상환경 활성화 이후에는 프로젝트 실행에 필요한 라이브러리를 설치한다. 프로젝트 루트 디렉토리에 위치한 requirements.txt 파일을 기준으로 pip install -r requirements.txt 명령어를 실행하면 FastAPI, uvicorn, pytest 등 프로젝트에 필요한 모든 패키지가 자동으로 설치된다.
+
+패키지 설치가 완료되면 FastAPI 서버를 실행할 수 있다. 프로젝트 루트 디렉토리에서 python app/main.py 명령어를 실행하면 서버가 시작되며, 내부적으로 uvicorn을 통해 FastAPI 애플리케이션이 실행된다. 서버는 기본적으로 8000번 포트를 사용하며, 실행 중 콘솔에 서버 시작 로그가 출력된다.
+
+서버가 정상적으로 실행되면 웹 브라우저에서 http://localhost:8000 주소로 접속할 수 있다. 정적 HTML 파일은 /static/index.html 경로에 마운트되어 있으며, 브라우저에서 http://localhost:8000/static/index.html로 접속하여 확인할 수 있다. 사용자 관련 API는 /api/user 경로 하위에 구성되어 있으며, /api/user/register, /api/user/login, /api/user/update-password, /api/user/delete 엔드포인트를 통해 회원 관리 기능을 수행할 수 있다.
+
+본 프로젝트는 JSON 파일을 기반으로 사용자 정보를 관리한다. 사용자 데이터는 프로젝트 루트의 database 디렉토리에 위치한 users.json 파일에 저장되며, 회원가입, 비밀번호 변경, 삭제 요청 시 해당 파일이 갱신된다. 서버 실행 전 users.json 파일이 존재하지 않거나 경로가 올바르지 않을 경우 정상 동작하지 않을 수 있으므로, database 디렉토리와 users.json 파일이 존재하는지 확인해야 한다.
+
+기능 검증을 위해 pytest 기반의 테스트 코드가 함께 제공된다. 서버 실행과는 별도로 프로젝트 루트 디렉토리에서 pytest 명령어를 실행하면 user_service 및 user_router에 대한 단위 테스트와 API 테스트가 자동으로 수행된다. 모든 테스트가 통과할 경우 구현된 기능이 정상적으로 동작함을 확인할 수 있다.
+
+본 프로젝트는 수업 과제 및 학습 목적을 위해 작성되었으며, FastAPI의 의존성 주입 구조와 계층 분리(Service–Repository 패턴)를 이해하는 것을 목표로 한다. 실행 환경이나 라이브러리 버전에 따라 동작이 달라질 수 있으며, Python 및 패키지 버전 차이로 인한 오류가 발생할 수 있다.
 
 ################ Crawling ################
 1. <reviews_enuri.csv>
