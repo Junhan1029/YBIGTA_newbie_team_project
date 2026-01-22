@@ -10,7 +10,10 @@
 <img width="590" height="200" alt="push_rejected" src="https://github.com/user-attachments/assets/c9fcca0f-6702-40b5-811c-dc401af1f29b" />
 <img width="642" height="607" alt="review_and_merged" src="https://github.com/user-attachments/assets/2205a210-4662-4d94-972c-0c778a9d35d1" />
 
+
+
 ################ Web ################
+
 본 프로젝트는 FastAPI 기반의 사용자 관리 웹 애플리케이션으로, 회원가입, 로그인, 비밀번호 변경, 사용자 삭제 기능을 제공한다. 프로젝트를 실행하기 위해서는 Python 3.9 이상 환경이 필요하며, 가상환경 구성을 통해 패키지 충돌을 방지하는 것을 권장한다.
 
 프로젝트 실행 전, 먼저 프로젝트 루트 디렉토리에서 Python 가상환경을 생성한다. Python이 설치된 환경에서 python -m venv venv 명령어를 실행하면 venv라는 이름의 가상환경이 생성된다. 가상환경 생성 후, Windows 환경에서는 venv\Scripts\activate 명령어를 사용하여 가상환경을 활성화하고, macOS 또는 Linux 환경에서는 source venv/bin/activate 명령어를 사용하여 가상환경을 활성화한다. 가상환경이 정상적으로 활성화되면 터미널 프롬프트에 가상환경 이름이 표시된다.
