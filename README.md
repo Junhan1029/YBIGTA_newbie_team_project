@@ -66,7 +66,7 @@
 마지막으로 텍스트 벡터화 단계에서는 전처리된 리뷰 텍스트를 수치화하여 분석 가능한 형태로 변환하였다. CountVectorizer를 활용하여 단어 출현 빈도 기반의 벡터를 생성하였으며, 불용어를 제거하고 최소 출현 빈도 기준을 적용하여 의미 없는 단어의 영향을 줄였다. 이를 통해 사이트별 주요 키워드 빈도 비교 및 텍스트 기반 비교 분석이 가능하도록 데이터가 변환되었다.
 
 이와 같은 전처리 및 Feature Engineering 과정을 통해 각 사이트의 리뷰 데이터는 결측치와 중복 문제가 해소되었으며, 텍스트 분석과 비교 분석에 적합한 구조로 정제되었다.
-<img width="3547" height="3210" alt="image" src="https://github.com/user-attachments/assets/5888d2b0-fb52-4253-a997-9b9f7fc61b92" />
+<img width="3005" height="2193" alt="image" src="https://github.com/user-attachments/assets/0fc70f04-a1e5-4bbe-ba3d-b72d7a08efa7" />
 <img width="3005" height="2193" alt="image" src="https://github.com/user-attachments/assets/a0893155-edaa-4fa2-98d0-26619fca7e28" />
 <img width="3005" height="2193" alt="image" src="https://github.com/user-attachments/assets/e8bab484-c1ff-46f9-853f-5d626a1525fb" />
 
