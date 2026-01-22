@@ -3,6 +3,7 @@
 안녕하세요 응용통계학과 22학번 장준한입니다! 나이는 03년생이고 취미는 볼링 치는 것입니다. 잘 부탁드려요!
 22학번 24살 응용통계학과 최재형입니다 밴드 음악 좋아합니다 열심히 하겠습니다!
 저희는 YBIGTA 신입 기수로 방학 세션에서 팀을 이루어 세션 과제를 최선을 다해 수행하고 있습니다.
+
 <img width="580" height="112" alt="branch_protection" src="https://github.com/user-attachments/assets/ce36c0b9-5308-4123-b31f-5bf3c9d5cd74" />
 <img width="590" height="200" alt="push_rejected" src="https://github.com/user-attachments/assets/c9fcca0f-6702-40b5-811c-dc401af1f29b" />
 <img width="642" height="607" alt="review_and_merged" src="https://github.com/user-attachments/assets/2205a210-4662-4d94-972c-0c778a9d35d1" />
