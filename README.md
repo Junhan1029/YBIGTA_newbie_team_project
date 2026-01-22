@@ -1,3 +1,13 @@
+################ 자기소개 및 팀 소개 ################
+안녕하세요 컴퓨터과학과 24학번 오유림입니다! 나이는 05년생이고 취미는 그림 그리기입니다. 잘 부탁드립니다!
+안녕하세요 응용통계학과 22학번 장준한입니다! 나이는 03년생이고 취미는 볼링 치는 것입니다. 잘 부탁드려요!
+22학번 24살 응용통계학과 최재형입니다 밴드 음악 좋아합니다 열심히 하겠습니다!
+저희는 YBIGTA 신입 기수로 방학 세션에서 팀을 이루어 세션 과제를 최선을 다해 수행하고 있습니다.
+<img width="580" height="112" alt="branch_protection" src="https://github.com/user-attachments/assets/ce36c0b9-5308-4123-b31f-5bf3c9d5cd74" />
+<img width="590" height="200" alt="push_rejected" src="https://github.com/user-attachments/assets/c9fcca0f-6702-40b5-811c-dc401af1f29b" />
+<img width="642" height="607" alt="review_and_merged" src="https://github.com/user-attachments/assets/2205a210-4662-4d94-972c-0c778a9d35d1" />
+
+
 ################ Crawling ################
 1. <reviews_enuri.csv>
 본 데이터는 가격 비교 사이트 에누리(Enuri, https://www.enuri.com)의 상품 상세 페이지에 게시된 사용자 리뷰를 웹 크롤링 방식으로 수집한 것이다. 수집 대상 URL은 https://www.enuri.com/detail.jsp?modelno=40629426이며, 공개적으로 제공되는 리뷰 정보를 기반으로 텍스트 분석 및 평점 분석을 위한 학습 및 과제 목적의 데이터셋 구축을 목표로 한다.
