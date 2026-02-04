@@ -238,5 +238,39 @@ RDS의 보안 그룹에서 퍼블릭 액세스를 비활성화하고, 인바운�
 
 이 3계층을 통해 `.env` 파일이 절대 외부에 노출되지 않으면서, EC2 런타임에 `--env-file /etc/app-secrets/.env` 옵션으로 안전하게 주입된다.
 
+---
+
+과제를 하며 배운 점과 마주쳤던 오류들
+
+### 배운 점
+
+1. 로컬에 있는 패키지들을 requirements.txt에 일일히 반영하지 않아도 Bash에서 pip freeze > requirements.txt를 입력하면 된다는 것을 깨달았다. 다만 로컬 컴퓨터 환경에만 존재하는 경로가 들어가서 직접 지워야 했다.
+
+2. mongoDB Compass에서 이전 과제에서 크롤링한 데이터들을 넣을 때, 3개의 csv 내부에 사이트 이름은 적혀있지 않았기 때문에 문제였는데,
+
+db.reviews.updateMany({}, { $set: { site_name: "Lotteon" } })
+
+db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "Enuri" } })
+
+이러한 명령어들을 Mongosh에 입력하면 간편하게 새 csv를 import 할 때마다 필드를 추가할 수 있다는 점을 배웠다.
+
+### 발생했던 오류
+
+1. 문제: Swagger에서 API를 테스트해 보는 과정에서 500 Internal Server Error가 코드 간 데이터 형식 불일치로 인해 발생했다. 에러 로그를 확인한 결과 "TypeError: LotteonProcessor.__init__() got an unexpected keyword argument 'output_path"가 발생해 있었다.
+해결: 에러 로그를 확인한 결과 "TypeError: LotteonProcessor.__init__() got an unexpected keyword argument 'output_path"가 문제였는데, review_router.py에서 전처리 객체를 만들 때, LotteonProcessor가 받지 않는 output_path라는 이름을 강제로 넘겨주려 해서 발생한 문제였다. 따라서 app/review/review_router.py에서 input_path=를 떼고 위치 기반으로 인자를 넘기도록 코드를 수정했다.
+관련 개념: 파이썬에서 함수나 클래스 생성자에 값을 넘길 때는 순서대로 넣는 방식(위치 인자)과 이름을 지정해서 넣는 방식(키워드 인자)이 있다. 클래스나 함수의 정의부(Signature)와 호출부의 인자 형식을 정확히 맞춰야 한다.
+
+2. 문제: Docker 이미지는 Linux 기반인데 requirements.txt에 윈도우 전용 패키지인 pywin32를 넣어버려서 설치 중에 오류가 발생했다.
+해결: requirements.txt를 직접 수정했다.
+관련 개념: 특정 라이브러리는 특정 운영체제(OS)에서만 작동하도록 설계되어 있다. 이를 플랫폼 의존성이라고 한다. 또한 도커는 기본적으로 리눅스 환경을 가상화하여 이미지를 만든다.
+
+3. 문제: .dockerignore에 .env가 추가된 채로 그냥 빌드하자 "ValueError: invalid literal for int() with base 10: 'None'" 에러가 발생했다.
+해결: run 명령어를 "docker run -d -p 8000:8000 --env-file .env --name ybigta-server ybigta-api"로 수정하고 실행했다.
+관련 개념: 보안을 위해 이미지 빌드 시 파일 포함을 막았다면 반드시 컨테이너를 실행할 때(run-time) --env-file 옵션을 통해 외부에서 설정값을 넣어주어야 한다.
+
+4. 문제: 전처리 API를 호출할 때 SSL handshake failed 및 타임아웃 에러가 발생했다.
+해결: MongoDB Atlas 콘솔에서 EC2의 탄력적 IP(52.79.227.159)를 화이트리스트에 추가하여 통신에 성공했다.
+관련 개념: MongoDB Atlas의 보안 설정(Network Access)에 AWS EC2 서버의 IP를 등록해야 접근 가능하다.
+
 
 
