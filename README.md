@@ -1,4 +1,4 @@
-################ 자기소개 및 팀 소개 ################
+ 자기소개 및 팀 소개 
 
 안녕하세요 컴퓨터과학과 24학번 오유림입니다! 나이는 05년생이고 취미는 그림 그리기입니다. 잘 부탁드립니다!
 안녕하세요 응용통계학과 22학번 장준한입니다! 나이는 03년생이고 취미는 볼링 치는 것입니다. 잘 부탁드려요!
@@ -12,7 +12,7 @@
 
 
 
-################ Web ################
+ Web 
 
 본 프로젝트는 FastAPI 기반의 사용자 관리 웹 애플리케이션으로, 회원가입, 로그인, 비밀번호 변경, 사용자 삭제 기능을 제공한다. 프로젝트를 실행하기 위해서는 Python 3.9 이상 환경이 필요하며, 가상환경 구성을 통해 패키지 충돌을 방지하는 것을 권장한다.
 
@@ -30,7 +30,7 @@
 
 본 프로젝트는 수업 과제 및 학습 목적을 위해 작성되었으며, FastAPI의 의존성 주입 구조와 계층 분리(Service–Repository 패턴)를 이해하는 것을 목표로 한다. 실행 환경이나 라이브러리 버전에 따라 동작이 달라질 수 있으며, Python 및 패키지 버전 차이로 인한 오류가 발생할 수 있다.
 
-################ Crawling ################
+ Crawling 
 1. <reviews_enuri.csv>
 본 데이터는 가격 비교 사이트 에누리(Enuri, https://www.enuri.com)의 상품 상세 페이지에 게시된 사용자 리뷰를 웹 크롤링 방식으로 수집한 것이다. 수집 대상 URL은 https://www.enuri.com/detail.jsp?modelno=40629426이며, 공개적으로 제공되는 리뷰 정보를 기반으로 텍스트 분석 및 평점 분석을 위한 학습 및 과제 목적의 데이터셋 구축을 목표로 한다.
 
@@ -75,7 +75,7 @@
 라이브러리 설치가 완료된 후, 크롤링 스크립트가 위치한 디렉토리에서 python main.py -o ../../database --all 명령어를 실행하면 에누리, 롯데온, 이마트몰 리뷰 크롤링이 순차적으로 수행된다. 실행이 완료되면 각 사이트별 리뷰 데이터가 CSV 파일 형태로 프로젝트 루트의 database 폴더에 저장된다.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
-################ EDA&FE, 시각화 ################
+ EDA&FE, 시각화 
 1. EDA: 개별 사이트에 대한 시각화 그래프 & 설명
 본 탐색적 데이터 분석(EDA)에서는 이마트, 에누리, 롯데온 세 쇼핑몰의 리뷰 데이터를 대상으로 리뷰 길이 분포, 별점 분포, 요일별 리뷰 작성 빈도 및 데이터 이상치 존재 여부를 시각화를 통해 분석하였다. 이를 통해 각 사이트 리뷰 데이터의 전반적인 특성과 구조를 파악하고, 이후 분석 및 전처리를 위한 기초 정보를 확인하고자 하였다.
 
@@ -134,3 +134,109 @@
 전처리 및 Feature Engineering 단계에서는 결측치 제거, 중복 리뷰 제거, 텍스트 정제, 리뷰 길이 및 요일 파생변수 생성 과정을 거쳐 분석에 적합한 데이터셋을 구성하였다. 정제된 텍스트 데이터는 CountVectorizer를 이용해 벡터화되었으며, 이를 기반으로 키워드 빈도 분석 및 사이트 간 비교 시각화를 수행하였다.
 
 모든 분석 과정은 순차적으로 실행되며, 크롤링 결과 CSV 파일이 정상적으로 생성되어 있을 경우 별도의 추가 설정 없이 전체 코드 실행이 가능하다. 본 과제는 수업 과제 및 학습 목적을 위해 작성되었으며, 데이터 분석 및 시각화 흐름을 종합적으로 이해하는 것을 목표로 한다.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[8회차] 핵심 인프라 구축 및 배포 (Infrastructure & Deployment) 과제 프로젝트
+
+본 프로젝트는 다음 4개 핵심 파트로 구성된다:
+
+1. DB (MySQL + MongoDB): 사용자 정보와 크롤링 리뷰 데이터 저장
+2. Docker: 프로젝트를 Docker 이미지로 패키징하여 Docker Hub에 업로드
+3. AWS EC2: Docker 컨테이너를 직접 배포하여 24/7 프로덕션 환경 구성
+4. GitHub Actions: CI/CD 자동화를 통해 push-to-deploy 파이프라인 구축
+
+---
+
+ 파트 1: 데이터베이스 - MySQL & MongoDB 분리
+
+데이터 특성에 맞는 저장소 선택:
+
+- MySQL (사용자 정보): 스키마가 정형화되고, ACID 특성으로 트랜잭션 일관성이 중요하다. `database/mysql_connection.py`에서 SQLAlchemy를 통해 연결을 관리하고, `user_repository.py`에서 회원가입, 로그인, 비밀번호 변경, 삭제 등을 CRUD 작업으로 처리한다. AWS RDS로 호스팅하여 자동 백업과 고가용성을 확보한다.
+
+- MongoDB (크롤링 리뷰): 필드가 자주 변하고 (감정분석 추가, 벡터화 추가), 빠른 삽입 속도가 필요하다. `database/mongodb_connection.py`로 MongoDB Atlas에 연결하고, `review_router.py`에서 `/review/preprocess/{site_name}` API를 통해 데이터를 조회/전처리/저장한다.
+
+파일 위치:
+- `database/mysql_connection.py`: MySQL 연결 설정
+- `database/mongodb_connection.py`: MongoDB Atlas 연결 설정
+- `app/user/user_repository.py`: 사용자 CRUD 작업
+- `app/review/review_router.py`: 전처리 API 엔드포인트
+
+---
+
+ 파트 2: Docker - 환경 일관성 및 레이어 캐싱
+
+문제: 개발 환경(Windows/Mac, Python 3.10)과 배포 환경(Ubuntu 22.04, Python 3.12)의 차이로 인한 호환성 문제
+
+해결: Docker는 애플리케이션과 모든 의존성을 하나의 이미지로 패키징하여 일관된 환경을 보장한다.
+
+Docker Hub 레포지토리: https://hub.docker.com/r/clp135/ybigta-api
+
+---
+
+ 파트 3: AWS - EC2 직접 배포
+
+배포 방식: AWS EC2 인스턴스에 Docker를 직접 설치하고, Docker 컨테이너로 FastAPI 서버를 운영
+
+데이터베이스 호스팅:
+- MySQL: AWS RDS (자동 백업, 멀티 AZ 고가용성)
+- MongoDB: MongoDB Atlas (클라우드 호스팅, 자동 스케일링)
+
+RDS 보안 설정 (Principle of Least Privilege):
+
+RDS의 보안 그룹에서 퍼블릭 액세스를 비활성화하고, 인바운드 규칙을 EC2 보안 그룹으로 제한하여, 개발자 로컬에서는 접근 불가능하지만 EC2 내부 네트워크에서만 MySQL 접속이 가능하도록 한다. 이렇게 하면 데이터베이스 자격증명이 유출되어도 EC2 내부에서만 접근 가능하여 보안 위험을 최소화한다.
+또한 EC2 초기 설정으로 기본 Docker 환경이 구성된 EC2 인스턴스를 활용하였다.
+
+![Login API Response](aws/login.png)
+![Register API Response](aws/register.png)
+![Update Password Response](aws/update-password.png)
+![Delete User Response](aws/delete.png)
+![Preprocessing Result](aws/preprocess.png)
+
+---
+
+ 파트 4: GitHub Actions - SSH 자동 배포
+
+목표: 코드 push 시 자동으로 테스트 → 빌드 → Docker Hub 푸시 → EC2 배포 진행
+
+자동화 이점:
+- 정확도 100%: 동일한 스크립트 매번 실행
+- 빠른 배포: 전체 과정 5분 이내 완료
+- 코드 품질 보장: 테스트 미통과 시 배포 전 자동 차단
+- 추적성: 누가 언제 어떤 코드를 배포했는지 기록
+
+워크플로우 3단계:
+
+1. Build and Push Docker Image
+   - GitHub Actions가 코드 체크아웃
+   - Docker 이미지 빌드 (레이어 캐싱 활용)
+   - Docker Hub에 푸시
+
+2. Deploy to EC2 (SSH)
+   - SSH 키 설정 (GitHub Secrets에서 로드)
+   - EC2 접속 후 `docker pull` → `docker stop` → `docker run` 실행
+   - 헬스 체크: `curl http://localhost:8000/docs` 확인
+
+3. GitHub Secrets 설정 (Settings → Secrets and variables → Actions)
+   - `DOCKER_USERNAME`: Docker Hub 사용자명
+   - `DOCKER_PASSWORD`: Docker Hub 토큰
+   - `EC2_HOST`: EC2 공인 IP
+   - `EC2_USER`: SSH 사용자명 (ubuntu)
+   - `EC2_SSH_KEY`: EC2 프라이빗 키 (PEM 형식)
+
+![GitHub Actions Workflow](aws/github_action.png)
+
+---
+
+ 보안: .dockerignore & GitHub Secrets
+
+3계층 보호:
+
+1. .gitignore (로컬): 개발자 PC에서 `.env`가 Git에 커밋되지 않도록 차단
+2. .dockerignore (Docker): Docker 빌드 시 `.env` 파일이 이미지에 포함되지 않도록 필터링
+3. GitHub Secrets (CI/CD): 민감한 정보(DOCKER_PASSWORD, EC2_SSH_KEY)를 GitHub에서 암호화 저장, 워크플로우 로그에 자동 마스킹
+
+이 3계층을 통해 `.env` 파일이 절대 외부에 노출되지 않으면서, EC2 런타임에 `--env-file /etc/app-secrets/.env` 옵션으로 안전하게 주입된다.
+
+
+
