@@ -1,0 +1,7 @@
+{
+  "source_csv": "C:\\computer\\ps\\YBIGTA_newbie_team_project\\st_app\\db\\reviews.csv",
+  "num_docs": 20,
+  "num_chunks": 20,
+  "chunk_size": 700,
+  "chunk_overlap": 80
+}
