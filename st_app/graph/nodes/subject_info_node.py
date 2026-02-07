@@ -1,25 +1,24 @@
 import json
-from langchain_upstage import ChatUpstage
 from langchain_core.prompts import PromptTemplate
 from st_app.utils.state import GraphState
+from st_app.rag.llm import get_llm
 
 def info_node(state: GraphState):
     """
     subjects.json에서 도서 정보를 검색하여 답변을 생성하는 노드이다.
     """
     print("---도서 정보 검색 및 응답 생성 (Subject Info Node)---")
-    
+
     # 1. subjects.json 데이터 로드
     # 명세서의 경로(st_app/db/subject_information/subjects.json)를 참조한다.
     with open("st_app/db/subject_information/subjects.json", "r", encoding="utf-8") as f:
         subjects_data = json.load(f)
-    
+
     # 2. 사용자 질문 및 이전 상태 확인
     user_message = state["messages"][-1].content
-    
+
     # 3. LLM을 사용하여 질문에서 언급된 도서 식별 및 정보 추출
-    # Upstage Solar-1-Mini 모델을 사용한다.
-    llm = ChatUpstage(model="solar-1-mini-chat")
+    llm = get_llm()
     
     prompt = PromptTemplate(
         template="""당신은 도서 정보 전문가입니다. 제공된 [도서 데이터]를 바탕으로 사용자의 질문에 친절하게 답하세요.

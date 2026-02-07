@@ -1,15 +1,13 @@
-import os
 from langchain_community.vectorstores import FAISS
-from langchain_upstage import UpstageEmbeddings
+from st_app.rag.llm import get_embeddings
 
 def get_relevant_documents(query, k=3):
     """
     사용자의 질문과 가장 유사한 리뷰 문단을 FAISS DB에서 검색하여 반환한다.
     """
-    
-    # 1. Upstage 임베딩 모델 설정 (embedder.py와 동일한 모델 사용)
-    # API 키는 환경 변수 또는 Streamlit Secrets에서 관리하는 것이 안전하다.
-    embeddings = UpstageEmbeddings(model="solar-embedding-1-large")
+
+    # 1. Upstage 임베딩 모델 설정 (llm.py에서 관리)
+    embeddings = get_embeddings()
     
     # 2. 저장된 FAISS 인덱스 경로 설정
     # 명세서에 따라 st_app/db/faiss_index/ 폴더를 참조한다.

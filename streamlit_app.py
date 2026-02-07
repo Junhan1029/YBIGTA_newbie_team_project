@@ -81,9 +81,11 @@ def build_graph_app():
     )
 
     # 종료 엣지 설정
+    # Chat Node는 최종 응답이므로 END로 이동
     workflow.add_edge("chat_node", END)
-    workflow.add_edge("subject_info_node", END)
-    workflow.add_edge("rag_review_node", END)
+    # Subject Info / RAG Review 처리 후 Chat Node로 복귀
+    workflow.add_edge("subject_info_node", "chat_node")
+    workflow.add_edge("rag_review_node", "chat_node")
 
     return workflow.compile()
 

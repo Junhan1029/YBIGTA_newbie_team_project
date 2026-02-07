@@ -1,16 +1,16 @@
-from langchain_upstage import ChatUpstage
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from st_app.utils.state import GraphState
+from st_app.rag.llm import get_llm
 
 def route_question(state: GraphState):
     """
     사용자의 질문 의도를 분류하여 다음으로 이동할 노드를 결정한다.
     """
     print("---의도 분류 시작 (LLM Router)---")
-    
-    # 1. 의도 분류를 위한 LLM 설정 (Solar-1-Mini 사용)
-    llm = ChatUpstage(model="solar-1-mini-chat")
+
+    # 1. 의도 분류를 위한 LLM 설정
+    llm = get_llm()
     
     # 2. 의도 분류 프롬프트 작성 (김애란 작가 저서 컨텍스트 반영)
     prompt = PromptTemplate(
