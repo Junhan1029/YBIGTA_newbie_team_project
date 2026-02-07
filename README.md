@@ -324,3 +324,7 @@ class GraphState(TypedDict):
                            → review → rag_review_node → chat_node → END
 ```
 
+### 전체 로직 다이어그램 (Draw.io)
+
+![전체 아키텍처 다이어그램](aws/drawio_architecture.png)
+
