@@ -282,8 +282,7 @@ db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "E
 
 ### 작동 화면
 
-<!-- 아래에 작동 화면 스크린샷을 추가해주세요 -->
-<!-- 예시: ![chatbot_demo](aws/chatbot_demo.png) -->
+![RAG Agent 챗봇 실행 화면](aws/rag_agent_demo.png)
 
 ### 명세서
 
