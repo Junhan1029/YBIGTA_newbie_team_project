@@ -272,5 +272,56 @@ db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "E
 해결: MongoDB Atlas 콘솔에서 EC2의 탄력적 IP(52.79.227.159)를 화이트리스트에 추가하여 통신에 성공했다.
 관련 개념: MongoDB Atlas의 보안 설정(Network Access)에 AWS EC2 서버의 IP를 등록해야 접근 가능하다.
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------
 
+[9회차] RAG, Agent 과제 - 김애란 저서 안내 챗봇
+
+## Streamlit Cloud 배포
+
+**배포 링크**: https://ybigtanewbieteamproject-mfn3nfg4bnt4havf3qgbwf.streamlit.app/
+
+### 작동 화면
+
+<!-- 아래에 작동 화면 스크린샷을 추가해주세요 -->
+<!-- 예시: ![chatbot_demo](aws/chatbot_demo.png) -->
+
+### 명세서
+
+과제 명세서는 프로젝트 루트의 `신입기수 교육세션 - RAG AGENT 과제 명세서.xlsx` 파일을 참조한다.
+
+---
+
+## 구현 설명
+
+### GraphState 구현 방식
+
+`st_app/utils/state.py`에서 LangGraph의 노드 간 전달 상태를 `TypedDict` 기반으로 정의하였다.
+
+```python
+class GraphState(TypedDict):
+    messages: Annotated[List[BaseMessage], add_messages]
+    intent: str
+    selected_book: str
+    context: str
+```
+
+- **messages**: 대화 기록을 저장하며, LangGraph의 `add_messages` 리듀서를 통해 새 메시지가 기존 리스트에 자동으로 추가된다. 이를 통해 각 노드가 메시지를 반환할 때 이전 대화 컨텍스트가 유지된다.
+- **intent**: Router가 LLM을 통해 판단한 사용자의 의도(`chat`, `info`, `review`)를 저장한다.
+- **selected_book**: 사용자 질문에서 언급된 특정 도서명을 추적하기 위한 필드이다.
+- **context**: RAG 노드에서 FAISS 검색으로 가져온 리뷰 원문이나 도서 정보를 임시 저장하는 공간이다. Streamlit UI에서 "참조한 정보/리뷰 확인" 아코디언으로 사용자에게 투명하게 제공된다.
+
+### 조건부 라우팅 구현 방식
+
+`st_app/graph/router.py`에서 **규칙 기반이 아닌 LLM 기반의 조건부 라우팅**을 구현하였다.
+
+1. **LLM 의도 분류**: Upstage Solar-1-Mini 모델에 사용자의 질문을 전달하고, `info` / `review` / `chat` 세 가지 카테고리 중 하나로 분류하도록 프롬프트를 설계하였다.
+2. **JSON 파싱**: LLM의 응답을 `JsonOutputParser`로 파싱하여 `{"intent": "카테고리명"}` 형태의 구조화된 결과를 얻는다.
+3. **LangGraph 분기**: `set_conditional_entry_point`를 사용하여 Router의 반환값에 따라 `chat_node`, `subject_info_node`, `rag_review_node` 중 하나로 분기한다.
+4. **Chat Node 복귀**: Subject Info Node와 RAG Review Node는 처리 완료 후 Chat Node로 복귀하여 최종 응답을 생성한 뒤 종료된다.
+
+```
+사용자 입력 → [LLM Router] → chat → chat_node → END
+                           → info → subject_info_node → chat_node → END
+                           → review → rag_review_node → chat_node → END
+```
 
