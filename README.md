@@ -11,7 +11,7 @@ This repository contains two related learning tracks, not one production applica
 
 ![Book assistant demonstration](aws/rag_agent_demo.png)
 
-[Streamlit demonstration](https://ybigtanewbieteamproject-mfn3nfg4bnt4havf3qgbwf.streamlit.app/) may sleep after inactivity. The screenshot above is available without starting the app. Live responses require an Upstage API key; do not use the hosted demo to submit private information.
+The hosted Streamlit demo is no longer publicly accessible: as of September 15, 2026 the app URL redirects to a Streamlit login page. The screenshot above documents the interface. To run the assistant yourself, follow the Book assistant section below; live responses require an Upstage API key.
 
 ![Architecture](aws/drawio_architecture.png)
 
@@ -43,6 +43,7 @@ The original Korean coursework write-up, including screenshots and lessons learn
 | `test/` | Existing coursework tests |
 | `.github/workflows/deploy.yaml` | Docker build and EC2 deployment |
 | `aws/` | Demonstration and deployment screenshots |
+| `docs/` | Coursework assignment specification (RAG assistant) |
 
 ## Local setup
 

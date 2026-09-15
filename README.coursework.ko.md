@@ -224,7 +224,7 @@ RDS의 보안 그룹에서 퍼블릭 액세스를 비활성화하고, 인바운�
    - `DOCKER_PASSWORD`: Docker Hub 토큰
    - `EC2_HOST`: EC2 공인 IP
    - `EC2_USER`: SSH 사용자명 (ubuntu)
-   - `EC2_SSH_KEY`: EC2 프라이빗 키 (PEM 형식)
+   - `EC2_KEY`: EC2 프라이빗 키 (PEM 형식)
 
 ![GitHub Actions Workflow](aws/github_action.png)
 
@@ -236,7 +236,7 @@ RDS의 보안 그룹에서 퍼블릭 액세스를 비활성화하고, 인바운�
 
 1. .gitignore (로컬): 개발자 PC에서 `.env`가 Git에 커밋되지 않도록 차단
 2. .dockerignore (Docker): Docker 빌드 시 `.env` 파일이 이미지에 포함되지 않도록 필터링
-3. GitHub Secrets (CI/CD): 민감한 정보(DOCKER_PASSWORD, EC2_SSH_KEY)를 GitHub에서 암호화 저장, 워크플로우 로그에 자동 마스킹
+3. GitHub Secrets (CI/CD): 민감한 정보(DOCKER_PASSWORD, EC2_KEY)를 GitHub에서 암호화 저장, 워크플로우 로그에 자동 마스킹
 
 이 3계층을 통해 `.env` 파일이 절대 외부에 노출되지 않으면서, EC2 런타임에 `--env-file /etc/app-secrets/.env` 옵션으로 안전하게 주입된다.
 
@@ -271,7 +271,7 @@ db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "E
 관련 개념: 보안을 위해 이미지 빌드 시 파일 포함을 막았다면 반드시 컨테이너를 실행할 때(run-time) --env-file 옵션을 통해 외부에서 설정값을 넣어주어야 한다.
 
 4. 문제: 전처리 API를 호출할 때 SSL handshake failed 및 타임아웃 에러가 발생했다.
-해결: MongoDB Atlas 콘솔에서 EC2의 탄력적 IP(52.79.227.159)를 화이트리스트에 추가하여 통신에 성공했다.
+해결: MongoDB Atlas 콘솔에서 EC2의 탄력적 IP를 화이트리스트에 추가하여 통신에 성공했다.
 관련 개념: MongoDB Atlas의 보안 설정(Network Access)에 AWS EC2 서버의 IP를 등록해야 접근 가능하다.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -280,7 +280,7 @@ db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "E
 
 ## Streamlit Cloud 배포
 
-**배포 링크**: https://ybigtanewbieteamproject-mfn3nfg4bnt4havf3qgbwf.streamlit.app/
+**배포 링크**: https://ybigtanewbieteamproject-mfn3nfg4bnt4havf3qgbwf.streamlit.app/ (2026-09-15 확인: 비로그인 접근 시 Streamlit 로그인 페이지로 이동하며 공개 열람 불가. 아래 화면은 당시 기록)
 
 ### 작동 화면
 
@@ -288,7 +288,7 @@ db.reviews.updateMany({ site_name: { $exists: false } }, { $set: { site_name: "E
 
 ### 명세서
 
-과제 명세서는 프로젝트 루트의 `신입기수 교육세션 - RAG AGENT 과제 명세서.xlsx` 파일을 참조한다.
+과제 명세서는 `docs/RAG_agent_assignment_spec.xlsx` 파일을 참조한다.
 
 ---
 
