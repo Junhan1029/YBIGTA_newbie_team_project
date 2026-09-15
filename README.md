@@ -88,6 +88,8 @@ The interface accepts an Upstage API key or reads `UPSTAGE_API_KEY` from Streaml
 
 ## Deployment: what the current workflow does
 
+**Deployment status (checked September 15, 2026):** the latest five runs failed at the EC2 deployment job on February 7–8, 2026. The retained annotations report exit code 1; they do not establish that the EC2 instance was terminated. This repository does not currently demonstrate a verified working deployment. [Run history](https://github.com/Junhan1029/YBIGTA_newbie_team_project/actions/workflows/deploy.yaml).
+
 On pushes to `main`, `.github/workflows/deploy.yaml` builds and pushes the image `<DOCKER_USERNAME>/ybigta-backend:latest`, then uses SSH to replace the EC2 container.
 
 Required GitHub secret names are `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `EC2_HOST`, `EC2_USER` and **`EC2_KEY`**. The SSH command uses a host-side `.env` file via `--env-file .env`.
